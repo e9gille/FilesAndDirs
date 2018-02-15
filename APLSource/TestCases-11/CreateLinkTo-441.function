@@ -1,0 +1,9 @@
+ {r}←source CreateLinkTo link;cmd
+ r←⍬
+ :If 'Win'≡#.APLTreeUtils.GetOperatingSystem ⍬
+     cmd←'"cmd.exe" /C MKLINK /D "',link,'" "',source,'"'
+     1 #.WinSys.ShellExecute cmd
+ :Else
+     cmd←'ln -s "',source,'" "',link,'"'
+     ⎕SH cmd
+ :EndIf

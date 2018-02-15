@@ -1,0 +1,11 @@
+ R←Test_RmDir_006(stopFlag batchFlag);⎕TRAP;list;parms;rc;more;en
+⍝ Test the `RmDir` method on a non-existent directory
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←∆Failed
+
+ (rc en more)←##.FilesAndDirs.RmDir'This_should_not_exist_really'
+ →PassesIf 0=rc
+ →PassesIf 0=en
+ →PassesIf more≡'Directory does not exist'
+
+ R←∆OK

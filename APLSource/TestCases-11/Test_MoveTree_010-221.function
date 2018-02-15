@@ -1,0 +1,19 @@
+ R←Test_MoveTree_010(stopFlag batchFlag);⎕TRAP;tempPath;more;list;successFlag;success
+⍝ Exercise `MoveTree`: move an empty directry
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←∆Failed
+
+ tempPath←##.FilesAndDirs.GetTempPath,↑⎕SI
+ successFlag←'Create!'##.FilesAndDirs.CheckPath tempPath
+ ⍎(1≠successFlag)/'. ⍝ Something went wrong'
+ (success more list)←tempPath ##.FilesAndDirs.CopyTree tempPath,'__copy/'
+ →GoToTidyUp 1≠success
+ →GoToTidyUp~0∊⍴more
+ →GoToTidyUp 1≠↑⍴list
+
+ R←∆OK
+
+∆TidyUp:
+ :Trap 0
+     {}##.FilesAndDirs.RmDir tempPath
+ :EndTrap

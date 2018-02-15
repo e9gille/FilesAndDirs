@@ -1,0 +1,17 @@
+ R←Test_Dir_008(stopFlag batchFlag);⎕TRAP;list
+⍝ Test the `Dir` method with wildcards in invalid places
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←∆Failed
+
+ :Trap 0
+     {}##.FilesAndDirs.Dir ∆Home,'/Second/*/*_?????'
+     →PassesIf 0
+ :Else
+     :If 'Win'≡#.APLTreeUtils.GetOperatingSystem ⍬
+         →PassesIf∨/'Wildcard characters are allowed only after the last "\"'⍷↑⎕DM
+     :Else
+         →PassesIf∨/'Wildcard characters are allowed only after the last "/"'⍷↑⎕DM
+     :EndIf
+ :EndTrap
+
+ R←∆OK

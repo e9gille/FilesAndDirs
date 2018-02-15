@@ -1,0 +1,16 @@
+ R←Test_RmDir_999(stopFlag batchFlag);⎕TRAP;list;parms;rc;more;en
+⍝ Test the `RmDir` method on a non-empty directory
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←∆Failed
+
+ (rc en more)←##.FilesAndDirs.RmDir ∆Home
+ →PassesIf 0=rc
+
+ :Trap 6
+     {}##.FilesAndDirs.Dir ∆Home
+     :Return
+ :Else
+     →PassesIf∨/'does not exist'⍷⎕DMX.EM
+ :EndTrap
+
+ R←∆OK

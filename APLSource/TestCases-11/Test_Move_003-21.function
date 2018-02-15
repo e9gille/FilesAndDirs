@@ -1,0 +1,19 @@
+ R←Test_Move_003(stopFlag batchFlag);⎕TRAP;myTempDir;filename;rc;more
+⍝ Exercise `MoveTo`: move a file to a folder and give it a new name.
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←∆Failed
+
+ myTempDir←##.FilesAndDirs.GetTempPath,(⍕#.OS.GetPID),'_',(' '~⍨⍕⎕TS),'/'
+ ##.FilesAndDirs.MkDir myTempDir
+ filename←myTempDir,↑⎕SI
+ #.APLTreeUtils.WriteUtf8File filename(↑⎕SI)
+ ##.FilesAndDirs.MkDir myTempDir,'TargetDir'
+ (rc more)←filename ##.FilesAndDirs.MoveTo myTempDir,'TargetDir/newname'
+ →GoToTidyUp 0≠rc
+ →GoToTidyUp 0=##.FilesAndDirs.IsFile myTempDir,'TargetDir/newname'
+ →GoToTidyUp 0≠##.FilesAndDirs.IsFile filename
+
+ R←∆OK
+
+∆TidyUp:
+ {}##.FilesAndDirs.RmDir myTempDir

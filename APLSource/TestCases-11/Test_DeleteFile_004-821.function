@@ -1,0 +1,8 @@
+ R←Test_DeleteFile_004(stopFlag batchFlag);⎕TRAP
+⍝ Test the `DeleteFile` on an empty array
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←∆Failed
+
+ →PassesIf 0=##.FilesAndDirs.DeleteFile''
+
+ R←∆OK

@@ -1,0 +1,18 @@
+ R←Test_Misc_012(stopFlag batchFlag);⎕TRAP;path;filename;buffer
+⍝ Test the `PolishCurrentDir` method
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←∆Failed
+
+ path←##.FilesAndDirs.PWD,'\Tests\'
+ filename←path,(↑⎕SI),'_result.txt'
+ ##.FilesAndDirs.DeleteFile filename
+ :If ##.FilesAndDirs.IsFile filename
+     . ⍝ Something is very wrong
+ :EndIf
+ ('-x' 0)('RIDE_INIT' '')∆StartDyalogInstance'Tests/Test_Misc_012'
+ →FailsIf 0=1{20=⍺:0 ⋄ _←⎕DL 0.2 ⋄ ##.FilesAndDirs.IsFile ⍵:1 ⋄ (⍺+1)∇ ⍵}filename
+ buffer←#.APLTreeUtils.ReadUtf8File filename
+ ##.FilesAndDirs.DeleteFile filename
+ →PassesIf≡/buffer
+
+ R←∆OK

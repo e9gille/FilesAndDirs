@@ -1,0 +1,17 @@
+ R←Test_Copy_002(stopFlag batchFlag);⎕TRAP;myTempDir;filename;rc;more
+⍝ Exercise `CopyTo`: copy a file to a folder with a new name
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←∆Failed
+
+ myTempDir←##.FilesAndDirs.GetTempPath,(⍕#.OS.GetPID),'_',(' '~⍨⍕⎕TS),'/'
+ ##.FilesAndDirs.MkDir myTempDir
+ filename←myTempDir,↑⎕SI
+ #.APLTreeUtils.WriteUtf8File filename(↑⎕SI)
+ ##.FilesAndDirs.MkDir myTempDir,'TargetDir'
+ (rc more)←filename ##.FilesAndDirs.CopyTo myTempDir,'TargetDir/NewName'
+ →GoToTidyUp 0=##.FilesAndDirs.IsFile myTempDir,'TargetDir/NewName'
+
+ R←∆OK
+
+∆TidyUp:
+ {}##.FilesAndDirs.RmDir myTempDir

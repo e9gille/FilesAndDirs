@@ -1,0 +1,10 @@
+ R←Test_Misc_010(stopFlag batchFlag);⎕TRAP;tempFilename
+⍝ Test the `GetTempFilename` method
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←∆Failed
+
+ tempFilename←##.FilesAndDirs.GetTempFilename''
+ →PassesIf 1=##.FilesAndDirs.IsFile tempFilename
+ ##.FilesAndDirs.DeleteFile tempFilename
+
+ R←∆OK

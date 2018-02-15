@@ -1,0 +1,25 @@
+ R←Test_Misc_016(stopFlag batchFlag);⎕TRAP;myTempPath;filename;tno;success
+⍝ Test `CreateFile`
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←∆Failed
+
+ myTempPath←##.FilesAndDirs.GetTempPath,↑⎕SI
+ {}##.FilesAndDirs.RmDir myTempPath
+ success←'Create!'##.FilesAndDirs.CheckPath myTempPath
+ ⍎(0=success)/'. ⍝ Huuh?!'
+ filename←myTempPath,'\foo2'
+ tno←##.FilesAndDirs.CreateFile filename
+
+ →GoToTidyUp 0=##.FilesAndDirs.Exists filename
+ →GoToTidyUp 0=##.FilesAndDirs.IsFile filename
+ →GoToTidyUp 0=##.FilesAndDirs.IsFile tno
+
+ R←∆OK
+
+∆TidyUp:
+ :Trap 0
+     ⎕NUNTIE tno
+ :EndTrap
+ :Trap 0
+     {}##.FilesAndDirs.RmDir myTempPath
+ :EndTrap

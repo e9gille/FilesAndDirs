@@ -1,0 +1,11 @@
+ R←Test_RmDir_003(stopFlag batchFlag);⎕TRAP;list;parms;rc;more;en
+⍝ Test the `RmDir` method on an ordinary file.
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←∆Failed
+
+ (rc en more)←##.FilesAndDirs.RmDir ∆Home,'\Second\Sub_b\file_aa'
+ →PassesIf 1=rc
+ →PassesIf 6=en
+ →PassesIf'Not a directory'≡more
+
+ R←∆OK

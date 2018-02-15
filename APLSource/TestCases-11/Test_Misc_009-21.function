@@ -1,0 +1,38 @@
+ R←Test_Misc_009(stopFlag batchFlag);⎕TRAP;appdata;buff
+⍝ Test the `NormalizePath` method
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←∆Failed
+
+ →PassesIf'a'≡##.FilesAndDirs.NormalizePath'a'
+
+ :If 'Win'≡#.APLTreeUtils.GetOperatingSystem ⍬
+     →PassesIf 0∊⍴##.FilesAndDirs.NormalizePath''
+     →PassesIf 0∊⍴'expand'##.FilesAndDirs.NormalizePath''
+     →PassesIf(##.FilesAndDirs.(EnforceBackslash PWD),'\a')≡'expand'##.FilesAndDirs.NormalizePath'a'
+     →PassesIf((##.FilesAndDirs.(EnforceBackslash Cd'')),'\a')≡'expand'##.FilesAndDirs.NormalizePath'a'
+     →PassesIf'abc'≡##.FilesAndDirs.NormalizePath'abc'
+     →PassesIf'abc\123'≡##.FilesAndDirs.NormalizePath'abc/123'
+     →PassesIf'abc\123'≡##.FilesAndDirs.NormalizePath'abc/123'
+     →PassesIf'abc\123'≡##.FilesAndDirs.NormalizePath'abc////123'
+     →PassesIf'abc\123'≡##.FilesAndDirs.NormalizePath'abc\\\///123'
+     →PassesIf'\\APLTeam2\abc\123'≡##.FilesAndDirs.NormalizePath'\\APLTeam2\abc\123'    ⍝ Because this is a UNC path!
+     →PassesIf'\\APLTeam2\abc\123'≡##.FilesAndDirs.NormalizePath'//APLTeam2/abc\123'    ⍝ Not a UNC path but treated as such - what else would it be?!
+     appdata←↑⎕CMD'echo %appdata%'
+     →PassesIf appdata≡##.FilesAndDirs.NormalizePath'%appdata%'                         ⍝ Env Vars are expanded since 1.5
+
+     ⍝ There is no need for the ¨ ↓ here but it should work anyway, and there as once a bug!
+     →PassesIf(3⍴⊂buff)≡'expand'∘##.FilesAndDirs.NormalizePath¨3⍴{'..\',⍵}¨¯1↑'\'##.APLTreeUtils.Split buff←##.FilesAndDirs.PWD
+ :Else
+     →PassesIf 0∊⍴##.FilesAndDirs.NormalizePath''
+     →PassesIf 0∊⍴'expand'##.FilesAndDirs.NormalizePath''
+     →PassesIf(##.FilesAndDirs.PWD,'/a')≡'expand'##.FilesAndDirs.NormalizePath'a'
+     →PassesIf'abc'≡##.FilesAndDirs.NormalizePath'abc'
+     →PassesIf'abc/123'≡##.FilesAndDirs.NormalizePath'abc/123'
+     →PassesIf'abc/123'≡##.FilesAndDirs.NormalizePath'abc/123'
+     →PassesIf'abc/123'≡##.FilesAndDirs.NormalizePath'abc////123'
+     →PassesIf'abc/123'≡##.FilesAndDirs.NormalizePath'abc\\\///123'
+     →PassesIf'\\APLTeam2/abc/123'≡##.FilesAndDirs.NormalizePath'\\APLTeam2\abc\123'    ⍝ Because this is a UNC path!
+     →PassesIf'\\APLTeam2/abc/123'≡##.FilesAndDirs.NormalizePath'//APLTeam2\abc\123'    ⍝ Not a UNC path but treated as such - what else would it be?!
+ :EndIf
+
+ R←∆OK

@@ -1,0 +1,19 @@
+ R←Test_Misc_003(stopFlag batchFlag);⎕TRAP;parms;tempDir;tempFile;myTempDir
+⍝ Test the `IsDir` method
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←∆Failed
+
+ tempDir←##.FilesAndDirs.GetTempPath
+ myTempDir←tempDir,(⍕#.OS.GetPID),'_',' '~⍨⍕⎕TS
+ 'Create!'##.FilesAndDirs.CheckPath myTempDir
+ →GoToTidyUp 0=##.FilesAndDirs.IsDir myTempDir
+ 'Create!'##.FilesAndDirs.CheckPath myTempDir,'\aaa\bb\c'
+ →GoToTidyUp 0=##.FilesAndDirs.IsDir myTempDir,'\aaa\bb\c'
+ →GoToTidyUp 1 1 1≢##.FilesAndDirs.IsDir myTempDir∘,¨'\aaa\bb\c' '\aaa\bb' '\aaa'
+
+ R←∆OK
+
+∆TidyUp:
+ :Trap 0
+     {}##.FilesAndDirs.RmDir myTempDir
+ :EndTrap

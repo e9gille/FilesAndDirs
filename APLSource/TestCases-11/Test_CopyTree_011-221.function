@@ -1,0 +1,22 @@
+ R←Test_CopyTree_011(stopFlag batchFlag);⎕TRAP;tempPath;more;list;successFlag;sucess;rc
+⍝ Exercise `CopyTree` on a tree that is not posing any problems.
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←∆Failed
+
+ tempPath←##.FilesAndDirs.GetTempPath,↑⎕SI
+ successFlag←'Create!'##.FilesAndDirs.CheckPath tempPath
+ ⍎(1≠successFlag)/'. ⍝ Something went wrong'
+ (sucess more list)←∆Home ##.FilesAndDirs.CopyTree tempPath
+ →GoToTidyUp 1≠sucess
+ →GoToTidyUp~0∊⍴more
+ →GoToTidyUp(1+⍴↑('recursive' 1)##.FilesAndDirs.Dir ∆Home,'/')≠↑⍴list
+ →GoToTidyUp 0∨.≠list[;1]
+ →GoToTidyUp 0∨.≠↑¨⍴¨list[;2]
+ →GoToTidyUp~∧/(1 ⎕NINFO¨list[;0])∊1 2  ⍝ The links should have transformed into files!
+
+ R←∆OK
+
+∆TidyUp:
+ :Trap 0
+     rc←##.FilesAndDirs.RmDir tempPath
+ :EndTrap

@@ -1,0 +1,30 @@
+ R←Test_Misc_013(stopFlag batchFlag);⎕TRAP;list
+⍝ Test the `ListDirs` method
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←∆Failed
+
+ list←##.FilesAndDirs.ListDirs ∆Home
+ →PassesIf 2=⍴list
+ →PassesIf∧/##.FilesAndDirs.IsDir¨list
+
+ list←'recursive'##.FilesAndDirs.ListDirs ∆Home
+ →PassesIf 2<⍴list
+ →PassesIf∧/##.FilesAndDirs.IsDir¨list
+
+ →PassesIf 2=⍴##.FilesAndDirs.ListDirs ∆Home,'/Second/Sub*'
+
+ :Trap 11
+     {}'Recursive'##.FilesAndDirs.ListDirs ∆Home,'/Second/Sub*'
+     →FailsIf 1
+ :Else
+     →PassesIf'"path" must not carry wildcard chars in case "Recursive" is specified'≡↑⎕DM
+ :EndTrap
+
+ :Trap 11
+     {}##.FilesAndDirs.ListDirs ∆Home,'/Sec*/Sub'
+     →FailsIf 1
+ :Else
+     →PassesIf'Wildcard characters are allowed only in the last part of a path'≡↑⎕DM
+ :EndTrap
+
+ R←∆OK

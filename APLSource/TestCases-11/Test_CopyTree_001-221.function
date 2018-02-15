@@ -1,0 +1,13 @@
+ R←Test_CopyTree_001(stopFlag batchFlag);⎕TRAP
+⍝ Exercise `CopyTree` with an invalid left argument
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←∆Failed
+
+ :Trap 11
+     ''##.FilesAndDirs.CopyTree''
+     →FailsIf 1
+ :Else
+     →PassesIf'Left argument is not a directory'≡↑⎕DM
+ :EndTrap
+
+ R←∆OK

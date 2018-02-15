@@ -1,0 +1,17 @@
+ R←Test_Move_002(stopFlag batchFlag);⎕TRAP;myTempDir;filename;rc;more
+⍝ Exercise `MoveTo`: Try to copy a non-existing file
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←∆Failed
+
+ myTempDir←##.FilesAndDirs.GetTempPath,(⍕#.OS.GetPID),'_',(' '~⍨⍕⎕TS),'/'
+ ##.FilesAndDirs.MkDir myTempDir
+ filename←myTempDir,↑⎕SI
+ ##.FilesAndDirs.MkDir myTempDir,'TargetDir'
+ (rc more)←filename ##.FilesAndDirs.MoveTo myTempDir,'TargetDir/'
+ →GoToTidyUp 0=rc
+ →GoToTidyUp 0∊⍴more
+
+ R←∆OK
+
+∆TidyUp:
+ {}##.FilesAndDirs.RmDir myTempDir

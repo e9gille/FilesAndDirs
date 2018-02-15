@@ -1,0 +1,13 @@
+ R←Test_CopyTree_004(stopFlag batchFlag);⎕TRAP
+⍝ Exercise `CopyTree` with an invalid right argument
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←∆Failed
+
+ :Trap 11
+     ∆Home ##.FilesAndDirs.CopyTree 123
+     →FailsIf 1
+ :Else
+     →PassesIf'Invalid right argument'≡↑⎕DM
+ :EndTrap
+
+ R←∆OK

@@ -1,0 +1,19 @@
+ R←Test_Move_009(stopFlag batchFlag);⎕TRAP;myTempDir;filenames;rc;more
+⍝ Exercise `MoveTo`: move three files into three different directories.
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←∆Failed
+
+ myTempDir←##.FilesAndDirs.GetTempPath,(⍕#.OS.GetPID),'_',(' '~⍨⍕⎕TS),'/'
+ ##.FilesAndDirs.MkDir myTempDir
+ filenames←{'foo_',(⍕⍵),'.txt'}¨1+⍳3
+ #.APLTreeUtils.WriteUtf8File{⍺⍺ ⍵ ⍵}¨myTempDir∘,¨filenames
+ ##.FilesAndDirs.MkDir myTempDir,'Sub/'
+ {##.FilesAndDirs.MkDir myTempDir,'Sub/',⍵}¨⍕¨1+⍳3
+ (rc more)←(myTempDir∘,¨filenames)##.FilesAndDirs.MoveTo(⊂myTempDir,'Sub/'),¨(⍕¨1+⍳3),¨'/'
+ →GoToTidyUp 3≠+/##.FilesAndDirs.IsFile¨filenames{myTempDir,'Sub/',⍵,'/',⍺}¨⍕¨1+⍳3
+ →GoToTidyUp 0≠+/##.FilesAndDirs.IsFile¨(⊂myTempDir),¨filenames
+
+ R←∆OK
+
+∆TidyUp:
+ {}##.FilesAndDirs.RmDir myTempDir

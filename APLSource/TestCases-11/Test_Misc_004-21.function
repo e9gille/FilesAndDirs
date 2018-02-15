@@ -1,0 +1,28 @@
+ R←Test_Misc_004(stopFlag batchFlag);⎕TRAP;tempDir;myTempFile;tno;myTempFile2
+⍝ Test the `IsFile` method
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←∆Failed
+
+ →PassesIf 0=##.FilesAndDirs.IsFile'**********'
+ tempDir←##.FilesAndDirs.GetTempPath
+ myTempFile←tempDir,(⍕#.OS.GetPID),'_',' '~⍨(⍕⎕TS),'_1'
+ myTempFile2←tempDir,(⍕#.OS.GetPID),'_',' '~⍨(⍕⎕TS),'_2'
+ #.APLTreeUtils.WriteUtf8File myTempFile'Temp test file'
+ #.APLTreeUtils.WriteUtf8File myTempFile2'Another temp test file'
+ →PassesIf 0=##.FilesAndDirs.IsDir myTempFile
+ →PassesIf 1=##.FilesAndDirs.IsFile myTempFile
+ →PassesIf 1 1≡##.FilesAndDirs.IsFile myTempFile myTempFile2
+ tno←myTempFile ⎕NTIE 0
+ →PassesIf 1=##.FilesAndDirs.IsFile tno
+ ⎕NUNTIE tno
+ :Trap 18
+     {}##.FilesAndDirs.IsFile tno
+     →GoToTidyUp 1
+ :EndTrap
+
+ R←∆OK
+
+∆TidyUp:
+ :If ⎕NEXISTS myTempFile
+     ##.FilesAndDirs.DeleteFile myTempFile
+ :EndIf

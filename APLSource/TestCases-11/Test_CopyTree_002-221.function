@@ -1,0 +1,14 @@
+ R←Test_CopyTree_002(stopFlag batchFlag);⎕TRAP;tempPath;more;list;success
+⍝ Exercise `CopyTree` with an invalid right argument
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←∆Failed
+
+ tempPath←##.FilesAndDirs.GetTempPath,'***'
+ :Trap 11
+     (success more list)←∆Home ##.FilesAndDirs.CopyTree tempPath
+     →FailsIf 1
+ :Else
+     →PassesIf'Right argument has wildcard characters'≡↑⎕DM
+ :EndTrap
+
+ R←∆OK

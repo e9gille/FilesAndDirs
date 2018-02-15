@@ -1,0 +1,26 @@
+ R←Test_Misc_015(stopFlag batchFlag);⎕TRAP
+⍝ Test `GetNewLineCharsFor'
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←∆Failed
+
+ →PassesIf(⎕UCS 13 10)≡##.FilesAndDirs.GetNewLineCharsFor'Win'
+ →PassesIf(⎕UCS 10)≡##.FilesAndDirs.GetNewLineCharsFor'Lin'
+ →PassesIf(⎕UCS 10)≡##.FilesAndDirs.GetNewLineCharsFor'Mac'
+
+ :Select #.APLTreeUtils.GetOperatingSystem ⍬
+ :Case 'Win'
+     →PassesIf(⎕UCS 13 10)≡##.FilesAndDirs.GetNewLineCharsFor''
+ :Case 'Lin'
+     →PassesIf(⎕UCS 10)≡##.FilesAndDirs.GetNewLineCharsFor''
+ :Case 'Mac'
+     →PassesIf(⎕UCS 10)≡##.FilesAndDirs.GetNewLineCharsFor''
+ :EndSelect
+
+ :Trap 11
+     {}##.FilesAndDirs.GetNewLineCharsFor'Foo'
+     →FailsIf 1
+ :Else
+     →PassesIf'⍵ is not a supported Operating System'≡↑⎕DM
+ :EndTrap
+
+ R←∆OK

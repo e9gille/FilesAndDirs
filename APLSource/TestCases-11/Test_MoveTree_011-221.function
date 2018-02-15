@@ -1,0 +1,23 @@
+ R←Test_MoveTree_011(stopFlag batchFlag);⎕TRAP;rc;more;list;successFlag;success;tempPathSource;tempPathTarget
+⍝ Exercise `MoveTree`: move a tree of dirs and files.
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←∆Failed
+
+ tempPathSource←##.FilesAndDirs.GetTempPath,'source_',↑⎕SI
+ tempPathTarget←##.FilesAndDirs.GetTempPath,'target_',↑⎕SI
+ {}##.FilesAndDirs.RmDir tempPathSource
+ {}##.FilesAndDirs.RmDir tempPathTarget
+ ∆CreateDirsAndFiles tempPathSource
+
+ (success more list)←tempPathSource ##.FilesAndDirs.MoveTree tempPathTarget
+ →GoToTidyUp 1≠success
+ →GoToTidyUp~0∊⍴more
+ →GoToTidyUp 0≠+/,list[;1 2]
+
+ R←∆OK
+
+∆TidyUp:
+ :Trap 0
+     {}##.FilesAndDirs.RmDir tempPathSource
+     {}##.FilesAndDirs.RmDir tempPathTarget
+ :EndTrap

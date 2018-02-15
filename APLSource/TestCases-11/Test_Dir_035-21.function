@@ -1,0 +1,16 @@
+ R←Test_Dir_035(stopFlag batchFlag);⎕TRAP;path;list
+⍝ Test the `Dir` method recursively with wildcards
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←∆Failed
+
+ path←'Tests\Test Dir'
+ list←0⊃('recursive' 1)##.FilesAndDirs.Dir path,'\'
+ →PassesIf 9=⍴list
+ list←0⊃('recursive' 1)##.FilesAndDirs.Dir path,'\sha*.*'
+ →PassesIf 3=⍴list
+ →PassesIf∧/'sha'{⍺∘≡¨(⍴,⍺)↑¨⍵}1⊃∘⎕NPARTS¨{⍵/⍨##.FilesAndDirs.IsFile ⍵}list
+ list←0⊃('recursive' 1)##.FilesAndDirs.Dir path,'\*.log'
+ →PassesIf 3=⍴list
+ →PassesIf∧/'.log'∘≡¨2⊃∘⎕NPARTS¨{⍵/⍨##.FilesAndDirs.IsFile ⍵}list
+
+ R←∆OK

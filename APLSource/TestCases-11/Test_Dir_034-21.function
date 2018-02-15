@@ -1,0 +1,27 @@
+ R←Test_Dir_034(stopFlag batchFlag);⎕TRAP;list;path;path2;Old
+⍝ Test the `Dir` method with wildcards and extensions
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←∆Failed
+
+ path←##.FilesAndDirs.GetTempPath,'\Test_Dir_34'
+ 'Create!'##.FilesAndDirs.CheckPath path
+ #.APLTreeUtils.WriteUtf8File(path,'\file1.md')('# File 1' '' 'A para')
+ #.APLTreeUtils.WriteUtf8File(path,'\file2.md')('# File 2' '' 'A para')
+ #.APLTreeUtils.WriteUtf8File(path,'\file3.csv')('APL,Good' 'Pascal,Old' 'Cobol,Horrible')
+ path2←path,'\SubFolder'
+ 'Create!'##.FilesAndDirs.CheckPath path2
+ #.APLTreeUtils.WriteUtf8File(path2,'\file4.md')('# File 4' '' 'A para')
+ #.APLTreeUtils.WriteUtf8File(path2,'\file5.md')('# File 5' '' 'A para')
+ #.APLTreeUtils.WriteUtf8File(path2,'\file6.csv')('This,1' 'That,2' 'More,3')
+
+ list←↑##.FilesAndDirs.Dir path,'\*.md'
+ →PassesIf 2=⍴list
+ list←↑('recursive' 1)##.FilesAndDirs.Dir path,'\*.md'
+ →PassesIf 4=+/##.FilesAndDirs.IsFile list
+ list←↑('recursive' 1)##.FilesAndDirs.Dir path,'\*3.cs*'
+ →PassesIf 1=+/##.FilesAndDirs.IsFile list
+
+ R←∆OK
+
+∆TidyUp:
+ ##.FilesAndDirs.RmDir path

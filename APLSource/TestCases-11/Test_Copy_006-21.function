@@ -1,0 +1,38 @@
+ R←Test_Copy_006(stopFlag batchFlag);⎕TRAP;myTempDir;filename;r;more;successFlag;rc;parms
+⍝ Exercise `CopyTo`: try to copy a file that is exclusively tied by another process
+⍝ This test makes sense under Windows only
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+
+ R←∆Failed
+
+ :If 'Win'≡#.APLTreeUtils.GetOperatingSystem ⍬  ⍝ This makes sense under Windows only
+
+     filename←(↑⎕SI),'.txt'
+     parms←('filename'filename)('RIDE_INIT' '')
+     (successFlag more)←parms ∆StartDyalogInstance'Tests/ExclusiveTie'
+     :If 0=successFlag
+         ⎕←'Could not start instance of Dyalog, therefore test case ',(↑⎕SI),' failed.'
+         :Return
+     :Else
+         ⎕DL 5
+         filename←↑,/1 ⎕NPARTS'Tests/',filename
+         →GoToTidyUp 0=⎕NEXISTS filename
+         myTempDir←##.FilesAndDirs.GetTempPath,(⍕#.OS.GetPID),'_',(' '~⍨⍕⎕TS),'/'
+         ##.FilesAndDirs.MkDir myTempDir
+         (rc more)←filename ##.FilesAndDirs.CopyTo myTempDir
+         →GoToTidyUp~rc∊1 32
+         →GoToTidyUp'The process cannot access the file because it is being used by another process.'≢more
+         ⎕DL 8   ⍝ The started task waits for 10 seconds, so we must wait a bit longer
+         ##.FilesAndDirs.DeleteFile filename
+
+         R←∆OK
+     :EndIf
+
+∆TidyUp:
+     :If ~0∊⍴myTempDir
+         {}##.FilesAndDirs.RmDir myTempDir
+     :EndIf
+
+ :Else
+     R←∆WindowsOnly
+ :EndIf

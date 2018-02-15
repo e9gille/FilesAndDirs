@@ -1,0 +1,31 @@
+ R←Test_Move_006(stopFlag batchFlag);⎕TRAP;filename;more;targetDir;rc;successFlag;parms
+⍝ Exercise `MoveTo` on a file that cannot be deleted (tied but another APL session). Windows only
+⍝ See also Move_007 trying to do the same but with `filename` and `targetDir` on different drives.
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←∆Failed
+
+ :If 'Win'≢#.APLTreeUtils.GetOperatingSystem ⍬
+     R←∆WindowsOnly
+ :Else
+     parms←''
+    ⍝parms,←⊂'-x' 1
+     parms,←⊂'filename'((↑⎕SI),'.txt"')
+    ⍝parms,←⊂'session_file' ''
+     (successFlag more)←parms ∆StartDyalogInstance'Tests/ReadOnlyTie'
+     ⍎(1≠successFlag)/'. ⍝ ?!'
+     ⎕DL 3
+     filename←↑,/1 ⎕NPARTS'Tests/',(↑⎕SI),'.txt'
+     targetDir←##.FilesAndDirs.NormalizePath ##.FilesAndDirs.GetTempPath,('/',⍕#.OS.GetPID),'_',(' '~⍨⍕⎕TS),'/'
+     ##.FilesAndDirs.MkDir targetDir
+     (rc more)←filename ##.FilesAndDirs.MoveTo targetDir
+     →GoToTidyUp 32≠rc
+     →GoToTidyUp'The process cannot access the file because it is being used by another process.'≢more
+     →GoToTidyUp 0≠##.FilesAndDirs.IsFile targetDir,↑,/1↓⎕NPARTS filename
+     →GoToTidyUp 1≠##.FilesAndDirs.IsFile filename
+
+     R←∆OK
+
+∆TidyUp:
+     {}##.FilesAndDirs.RmDir targetDir
+
+ :EndIf

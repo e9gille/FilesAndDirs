@@ -1,0 +1,20 @@
+ R←Test_Copy_011(stopFlag batchFlag);⎕TRAP;source;target;more;rc
+⍝ Exercise `CopyTo`: copy a file that starts with a "-" elsewhere
+⍝ This test makes sense under Windows only dfdfvdfv
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+
+ R←∆Failed
+
+ source←'-TestFile_source'
+ target←'-TestFile_target'
+
+ #.APLTreeUtils.WriteUtf8File source'Hello world'
+
+ (rc more)←source ##.FilesAndDirs.CopyTo target
+ →GoToTidyUp 0≠rc
+
+
+ R←∆OK
+
+∆TidyUp:
+ ##.FilesAndDirs.DeleteFile¨source target

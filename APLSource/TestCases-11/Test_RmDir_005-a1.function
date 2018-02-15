@@ -1,0 +1,13 @@
+ R←Test_RmDir_005(stopFlag batchFlag);⎕TRAP;list;parms;rc;more;en
+⍝ Test the `RmDir` method with an invalid left argument.
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←∆Failed
+
+ :Trap 0
+     (rc en more)←11 ##.FilesAndDirs.RmDir ∆Home,'\Second\Sub_a\deep\empty'
+     :Return
+ :Else
+     →PassesIf'Invalid left argument.'≡⎕DMX.EM
+ :EndTrap
+
+ R←∆OK

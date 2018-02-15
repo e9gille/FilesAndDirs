@@ -1,0 +1,12 @@
+ R←Test_Dir_030(stopFlag batchFlag);⎕TRAP;list1;list2;path;list3
+⍝ Test the `Dir` method recursively.
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←∆Failed
+
+ path←∆Home
+ list1←0⊃('recursive' 1)('follow' 0)##.FilesAndDirs.Dir path,'\'
+ →PassesIf 19=⍴list1     ⍝ Without following the symbolic link
+ list2←0⊃('recursive' 1)##.FilesAndDirs.Dir path,'\'
+ →PassesIf 22=⍴list2
+
+ R←∆OK

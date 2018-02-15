@@ -1,0 +1,22 @@
+ R←Test_DeleteFile_001(stopFlag batchFlag);⎕TRAP;myTempPath;success;filename
+⍝ Test the `DeleteFile` method on an existent file.
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←∆Failed
+
+ myTempPath←##.FilesAndDirs.GetTempPath,↑⎕SI
+ {}##.FilesAndDirs.RmDir myTempPath ⍝ Get rid of any leftovers
+ success←##.FilesAndDirs.MkDir myTempPath
+ filename←myTempPath,'\',↑⎕SI
+ #.APLTreeUtils.WriteUtf8File filename'Hello world'
+ ⍎(0=##.FilesAndDirs.IsFile filename)/'. ⍝ huh?!'
+ success←##.FilesAndDirs.DeleteFile filename
+ →PassesIf 1=success
+ →PassesIf 0=##.FilesAndDirs.IsFile filename
+ →PassesIf 0=##.FilesAndDirs.Exists filename
+
+ R←∆OK
+
+∆TidyUp:
+ :Trap 0
+     {}##.FilesAndDirs.RmDir myTempPath
+ :EndTrap

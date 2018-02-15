@@ -1,0 +1,36 @@
+ R←Test_MoveTree_012(stopFlag batchFlag);⎕TRAP;rc;more;list;successFlag;success;tempPathSource;tempPathTarget;filename;tno;record
+⍝ Exercise `MoveTree`: move a tree of dirs and files with one file tied exclusively
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←∆Failed
+
+ :If 'Win'≡#.APLTreeUtils.GetOperatingSystem ⍬
+     tempPathSource←##.FilesAndDirs.GetTempPath,'source_',↑⎕SI
+     tempPathTarget←##.FilesAndDirs.GetTempPath,'target_',↑⎕SI
+     {}##.FilesAndDirs.RmDir tempPathSource
+     {}##.FilesAndDirs.RmDir tempPathTarget
+     ∆CreateDirsAndFiles tempPathSource
+     filename←tempPathSource,'/Second/Sub_a/file_third'
+     ##.FilesAndDirs.DeleteFile filename
+     tno←filename ⎕FCREATE 0     ⍝ Implies exclusive tie
+
+     (success more list)←tempPathSource ##.FilesAndDirs.MoveTree tempPathTarget
+     →GoToTidyUp 1≠success
+     →GoToTidyUp~0∊⍴more
+     record←list[list[;0]⍳⊂##.FilesAndDirs.NormalizePath filename,'.dcf';]
+     →GoToTidyUp 0=1⊃record     ⍝ Copy must fail
+     →GoToTidyUp 1≠2⊃record     ⍝ And so must a read
+     →GoToTidyUp 0∊⍴3⊃record
+
+     R←∆OK
+
+∆TidyUp:
+     :Trap 0
+         ⎕FUNTIE tno
+     :EndTrap
+     :Trap 0
+         {}##.FilesAndDirs.RmDir tempPathSource
+         {}##.FilesAndDirs.RmDir tempPathTarget
+     :EndTrap
+ :Else
+     R←∆WindowsOnly
+ :EndIf

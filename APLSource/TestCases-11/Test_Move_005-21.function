@@ -1,0 +1,39 @@
+ R←Test_Move_005(stopFlag batchFlag);⎕TRAP;filename;rc;more;ini;targetDir;sourceDir
+⍝ Exercise `MoveTo` (Windows only): try to move from one drive to another
+⍝ Requires an INI file and appropriate settings.
+⍝ Assumes that Windows is installed on the C:\ drive and that
+⍝ [Config]:FolderOnSecondDrive points to a different drive,
+⍝ otherwise the test is pointless.
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←∆Failed
+
+ :If 'Win'≢#.APLTreeUtils.GetOperatingSystem ⍬
+     R←∆WindowsOnly
+ :ElseIf 0=⎕NEXISTS'Files/',∆GetComputerName,'.ini'
+     ⎕←'No INI file found for "',(∆GetComputerName),'"'
+     R←∆OK
+ :Else
+     ini←⎕NEW #.IniFiles(,⊂##.FilesAndDirs.PWD,'/Files/',∆GetComputerName,'.ini')
+     sourceDir←##.FilesAndDirs.GetTempPath,('/',⍕#.OS.GetPID),'_',(' '~⍨⍕⎕TS),'/'
+     ##.FilesAndDirs.MkDir sourceDir
+     filename←sourceDir,↑⎕SI
+     #.APLTreeUtils.WriteUtf8File filename(↑⎕SI)
+     targetDir←##.FilesAndDirs.NormalizePath(↑ini.Get'Config:FolderOnSecondDrive'),('/',⍕#.OS.GetPID),'_',(' '~⍨⍕⎕TS),'/'
+     ##.FilesAndDirs.MkDir targetDir
+     (rc more)←filename ##.FilesAndDirs.MoveTo targetDir
+     →GoToTidyUp 0≠rc
+     →GoToTidyUp 0=##.FilesAndDirs.IsFile targetDir,↑⎕SI
+     →GoToTidyUp 0≠##.FilesAndDirs.IsFile filename
+     #.APLTreeUtils.WriteUtf8File filename'Overwritten'
+     (rc more)←filename ##.FilesAndDirs.MoveTo targetDir
+     →GoToTidyUp 0≠rc
+     →GoToTidyUp 0=##.FilesAndDirs.IsFile targetDir,↑⎕SI
+     →GoToTidyUp 0≠##.FilesAndDirs.IsFile filename
+     →GoToTidyUp'Overwritten'≢#.APLTreeUtils.ReadUtf8File targetDir,↑⎕SI
+
+     R←∆OK
+
+∆TidyUp:
+     {}##.FilesAndDirs.RmDir targetDir
+
+ :EndIf

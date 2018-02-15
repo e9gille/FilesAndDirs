@@ -1,0 +1,44 @@
+ R←Test_Move_007(stopFlag batchFlag);⎕TRAP;filename;rc;more;ini;targetDir;sourceDir;successFlag;parms
+⍝ Exercise `MoveTo` on a file that cannot be deleted (tied by another APL session). Windows only!
+⍝ Noe that there is no such mechanism under Linux etc!
+⍝ See also `Move_006` which tries to achive the same but with `filename` and `targetDir`
+⍝ living on the same drive.\\
+⍝ Requires an INI file and appropriate settings.\\
+⍝ Assumes that test test cases run on C:\ and that
+⍝ [Config]:FolderOnSecondDrive points to a different drive,
+⍝ otherwise the test is pointless.\\
+⍝ Requires an INI file and appropriate settings.\\
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←∆Failed
+
+ :If 'Win'≢#.APLTreeUtils.GetOperatingSystem ⍬
+     R←∆WindowsOnly
+ :Else
+
+     :If 0=⎕NEXISTS ∆GetComputerName,'.ini'
+         ⎕←'No INI file found for "',(∆GetComputerName),'"'
+         .
+     :EndIf
+     ini←⎕NEW #.IniFiles(,⊂##.FilesAndDirs.PWD,'/',∆GetComputerName,'.ini')
+     parms←''
+    ⍝parms,←⊂'-x' 1
+     parms,←⊂'filename'((↑⎕SI),'.txt"')
+    ⍝parms,←⊂'session_file' ''
+     (successFlag more)←parms ∆StartDyalogInstance'Tests/ReadOnlyTie'
+     ⍎(1≠successFlag)/'. ⍝ ?!'
+     ⎕DL 3
+     filename←↑,/1 ⎕NPARTS'Tests/',(↑⎕SI),'.txt'
+     targetDir←##.FilesAndDirs.NormalizePath(↑ini.Get'Config:FolderOnSecondDrive'),('/',⍕#.OS.GetPID),'_',(' '~⍨⍕⎕TS),'/'
+     ##.FilesAndDirs.MkDir targetDir
+     (rc more)←filename ##.FilesAndDirs.MoveTo targetDir
+     →GoToTidyUp 32≠rc
+     →GoToTidyUp'The process cannot access the file because it is being used by another process.'≢more
+     →GoToTidyUp 0≠##.FilesAndDirs.IsFile targetDir,↑,/1↓⎕NPARTS filename
+     →GoToTidyUp 1≠##.FilesAndDirs.IsFile filename
+
+     R←∆OK
+
+∆TidyUp:
+     {}##.FilesAndDirs.RmDir targetDir
+
+ :EndIf

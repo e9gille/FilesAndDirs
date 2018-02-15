@@ -1,0 +1,21 @@
+ R←Test_Move_010(stopFlag batchFlag);⎕TRAP;myTempDir;filenames;rc;more
+⍝ Exercise `MoveTo`: move three files into three different directories but one of them does not exist
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←∆Failed
+
+ myTempDir←##.FilesAndDirs.GetTempPath,(⍕#.OS.GetPID),'_',(' '~⍨⍕⎕TS),'/'
+ ##.FilesAndDirs.MkDir myTempDir
+ filenames←{'foo_',(⍕⍵),'.txt'}¨1+⍳3
+ #.APLTreeUtils.WriteUtf8File{⍺⍺ ⍵ ⍵}¨myTempDir∘,¨filenames
+ 1 ⎕MKDIR myTempDir,'Sub/'
+ {1 ⎕MKDIR myTempDir,'Sub/',⍵}¨⍕¨1 0 1/1+⍳3
+ (rc more)←(myTempDir∘,¨filenames)##.FilesAndDirs.MoveTo(⊂myTempDir,'Sub/'),¨(⍕¨1+⍳3),¨'/'
+ →GoToTidyUp 2≠+/##.FilesAndDirs.IsFile¨filenames{myTempDir,'Sub/',⍵,'/',⍺}¨⍕¨1+⍳3
+ →GoToTidyUp 1≠+/##.FilesAndDirs.IsFile¨(⊂myTempDir),¨filenames
+ →GoToTidyUp 0=1⊃rc
+ →GoToTidyUp 0∊⍴1⊃more
+
+ R←∆OK
+
+∆TidyUp:
+ {}##.FilesAndDirs.RmDir myTempDir

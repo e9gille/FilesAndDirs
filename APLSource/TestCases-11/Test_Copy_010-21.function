@@ -1,0 +1,26 @@
+ R←Test_Copy_010(stopFlag batchFlag);⎕TRAP;myTempDir;filenames;more;rc
+⍝ Exercise `CopyTo`: Copy 3 files into a single dir with one having an invalid filename (Windows only)
+⍝ This test makes sense under Windows only dfdfvdfv
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+
+ R←∆Failed
+
+ :If 'Win'≡#.APLTreeUtils.GetOperatingSystem ⍬
+     myTempDir←##.FilesAndDirs.GetTempPath,(⍕#.OS.GetPID),'_',(' '~⍨⍕⎕TS),'/'
+     ##.FilesAndDirs.MkDir myTempDir
+     filenames←{'foo_',(⍕⍵),'.txt'}¨'1' '*' '3'
+     #.APLTreeUtils.WriteUtf8File{⍺⍺ ⍵ ⍵}¨myTempDir∘,¨1 0 1/filenames
+     ##.FilesAndDirs.MkDir myTempDir,'Sub/'
+     (rc more)←(myTempDir∘,¨filenames)##.FilesAndDirs.CopyTo myTempDir,'Sub/'
+     →GoToTidyUp 2≠+/##.FilesAndDirs.IsFile¨(⊂myTempDir,'Sub/'),¨filenames
+     →GoToTidyUp 2≠+/0=rc
+     →GoToTidyUp 2≠+/0=↑¨⍴¨more
+
+     R←∆OK
+
+∆TidyUp:
+     {}##.FilesAndDirs.RmDir myTempDir
+
+ :Else
+     R←∆WindowsOnly
+ :EndIf

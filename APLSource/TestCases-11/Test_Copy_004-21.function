@@ -1,0 +1,11 @@
+ R←Test_Copy_004(stopFlag batchFlag);⎕TRAP;myTempDir;filename;rc;more
+⍝ Exercise `CopyTo`: Try to copy a file that does not exist, not even the parent directory
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←∆Failed
+
+ myTempDir←##.FilesAndDirs.GetTempPath,(⍕#.OS.GetPID),'_',(' '~⍨⍕⎕TS),'/'
+ filename←myTempDir,↑⎕SI
+ (rc more)←filename ##.FilesAndDirs.CopyTo ##.FilesAndDirs.GetTempPath
+ →FailsIf 0=rc
+
+ R←∆OK

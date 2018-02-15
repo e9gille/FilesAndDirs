@@ -1,0 +1,11 @@
+:Namespace
+    CaseCode←'On'
+    Load←'..\APLTreeUtils\'
+    Load←'..\IniFiles\'
+    Load←'..\OS\'
+    Load←'..\Tester\'
+    Load←'..\WinSys\'
+    Open←''
+    ProjectSpace←'#._FilesAndDirs'
+    StartUp←'#._FilesAndDirs.CreateRefs ⍬'
+:EndNamespace

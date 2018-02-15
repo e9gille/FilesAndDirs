@@ -1,0 +1,28 @@
+ R←Test_DeleteFile_003(stopFlag batchFlag);⎕TRAP;link;source;success
+⍝ Test the `DeleteFile` method on a symbolic link.
+⍝ The link shall be deleted but the target must survive.
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←∆Failed
+
+ source←##.FilesAndDirs.GetTempPath,(↑⎕SI),'_source'
+ link←##.FilesAndDirs.GetTempPath,(↑⎕SI),'_link'
+ {}##.FilesAndDirs.RmDir source ⍝ Get rid of any leftovers
+
+ ##.FilesAndDirs.MkDir source
+ source CreateLinkTo link
+ {⎕NEXISTS ⍵: ⋄ _←⎕DL 0.1 ⋄ ∇ ⍵}link ⍝ Make sure the link exists!
+
+ success←##.FilesAndDirs.DeleteFile link
+ →PassesIf 1=success
+ →PassesIf 0=##.FilesAndDirs.Exists link
+ →PassesIf 1=##.FilesAndDirs.Exists source
+
+ R←∆OK
+
+∆TidyUp:
+ :Trap 0
+     {}##.FilesAndDirs.RmDir source
+ :EndTrap
+ :Trap 0
+     {}##.FilesAndDirs.RmDir link
+ :EndTrap

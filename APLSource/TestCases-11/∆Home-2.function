@@ -1,0 +1,8 @@
+ r←∆Home
+ r←'TempDirForTests'
+ :If 'Win'≡#.APLTreeUtils.GetOperatingSystem ⍬
+     r←##.FilesAndDirs.GetTempPath,r
+ :Else
+     r←'/tmp/',r
+ :EndIf
+ r←##.FilesAndDirs.NormalizePath r

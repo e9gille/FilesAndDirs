@@ -1,0 +1,11 @@
+ R←Test_Dir_012(stopFlag batchFlag);⎕TRAP;list;parms;buff;list1;list2
+⍝ Test the `Dir` method with an empty right argument
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←∆Failed
+
+ list1←##.FilesAndDirs.Dir''
+ list2←##.FilesAndDirs.Dir ##.FilesAndDirs.PWD,'/'
+
+ →PassesIf list1≡list2
+
+ R←∆OK
