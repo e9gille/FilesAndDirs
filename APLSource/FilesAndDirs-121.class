@@ -58,7 +58,7 @@
       :Access Public shared
       ⍝ * 1.8.0
       ⍝   * First release on GitHub after the conversion from the APL wiki.
-      ⍝ * 1.7.1
+      ⍝ * 1.7.1\\
       ⍝   Bug fix that was introduced with 1.7.0: if a folder contained directories that match a 
       ⍝   wildcard expression those folders were ignored anyway.
       ⍝ * 1.7.0
@@ -551,10 +551,10 @@
     ∇ path←{expandFlag}NormalizePath path;UNCflag;sep;ExpandEnvironmentStrings;isScalar
       :Access Public Shared
       ⍝ `path` might be either a simple text vector or scalar representing a single filename or a
-      ⍝ vector of text vectors with each item representing a text vector.
+      ⍝ vector of text vectors with each item representing a single filename.
       ⍝ Enforces either `\` or `/` as separator in `path` depending on the current operating system.\\
-      ⍝ If you **must** enforce a particular separator then use either `EnforceBackslash` or
-      ⍝ `Enforceslash`.\\
+      ⍝ If you need a particular separator then use either `EnforceBackslash` or
+      ⍝ `EnforceSlash`.\\
       ⍝ Note that by default a relative path remains relative and any `../` (or `..\`) is not touched.
       ⍝ You can change this by specifying "expand" as the (optional) left argument; then `path` is
       ⍝ expanded to an absolute path. As a side effect any `../` is transformed appropriately as well.\\

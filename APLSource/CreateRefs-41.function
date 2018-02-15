@@ -1,10 +1,8 @@
  {r}←CreateRefs dummy
-⍝ Currently a dummy. When we convert to acre from our own "packet manager" then this fns
-⍝ must establish all the refs needed in #._FilesAndDirs
  r←⍬
- ⍝ APLTreeUtils←#.APLTreeUtils
- ⍝ IniFiles←#.IniFiles
- ⍝ OS←#.OS
- ⍝ WinSys←#.WinSys
- ⍝ Tester←#.Tester
+⍝ APLTreeUtils←#.APLTreeUtils
+⍝ WinSys←#.WinSys
+⍝ OS←#.OS
+⍝ Tester←#.Tester
+⍝ IniFiles←#.IniFiles
 ⍝Done

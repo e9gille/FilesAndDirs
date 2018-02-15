@@ -9,11 +9,11 @@
 
  :If 'Win'≢#.APLTreeUtils.GetOperatingSystem ⍬
      R←∆WindowsOnly
- :ElseIf 0=⎕NEXISTS'Files/',∆GetComputerName,'.ini'
+ :ElseIf 0=⎕NEXISTS ∆GetComputerName,'.ini'
      ⎕←'No INI file found for "',(∆GetComputerName),'"'
      R←∆OK
  :Else
-     ini←⎕NEW #.IniFiles(,⊂##.FilesAndDirs.PWD,'/Files/',∆GetComputerName,'.ini')
+     ini←⎕NEW #.IniFiles(,⊂∆GetComputerName,'.ini')
      sourceDir←##.FilesAndDirs.GetTempPath,('/',⍕#.OS.GetPID),'_',(' '~⍨⍕⎕TS),'/'
      ##.FilesAndDirs.MkDir sourceDir
      filename←sourceDir,↑⎕SI
