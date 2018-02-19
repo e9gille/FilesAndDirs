@@ -8,20 +8,18 @@
  :AndIf 1≠↑##.FilesAndDirs.RmDir myTempDir
      .⍝ Something is wrong
  :EndIf
- →PassesIf 0=##.FilesAndDirs.CheckPath myTempDir
- →PassesIf 1='Create!'##.FilesAndDirs.CheckPath myTempDir
+ →GoToTidyUp 0≠##.FilesAndDirs.CheckPath myTempDir
+ →GoToTidyUp 1≠'Create!'##.FilesAndDirs.CheckPath myTempDir
  myTempDir,←'aaa/bb/c'
- →PassesIf 1='Create!'##.FilesAndDirs.CheckPath myTempDir
- →PassesIf ##.FilesAndDirs.IsDir myTempDir
+ →GoToTidyUp 1≠'Create!'##.FilesAndDirs.CheckPath myTempDir
+ →GoToTidyUp~##.FilesAndDirs.IsDir myTempDir
 
  :If 'Win'≡#.APLTreeUtils.GetOperatingSystem ⍬
      ⍝ Use an invalid filename in order to provoke an error
-     →PassesIf 0='Create!'##.FilesAndDirs.CheckPath myTempDir,'???'
+     →GoToTidyUp 0≠'Create!'##.FilesAndDirs.CheckPath myTempDir,'???'
  :EndIf
 
  R←∆OK
 
 ∆TidyUp:
- :Trap 0
-     {}##.FilesAndDirs.RmDir myTempDir
- :EndTrap
+ {}##.FilesAndDirs.RmDir myTempDir

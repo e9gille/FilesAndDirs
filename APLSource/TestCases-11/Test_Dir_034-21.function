@@ -3,7 +3,7 @@
  ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
  R←∆Failed
 
- path←##.FilesAndDirs.GetTempPath,'\Test_Dir_34'
+ path←##.FilesAndDirs.GetTempPath,'\',↑⎕SI
  'Create!'##.FilesAndDirs.CheckPath path
  #.APLTreeUtils.WriteUtf8File(path,'\file1.md')('# File 1' '' 'A para')
  #.APLTreeUtils.WriteUtf8File(path,'\file2.md')('# File 2' '' 'A para')
@@ -15,11 +15,11 @@
  #.APLTreeUtils.WriteUtf8File(path2,'\file6.csv')('This,1' 'That,2' 'More,3')
 
  list←↑##.FilesAndDirs.Dir path,'\*.md'
- →PassesIf 2=⍴list
+ →GoToTidyUp 2≠⍴list
  list←↑('recursive' 1)##.FilesAndDirs.Dir path,'\*.md'
- →PassesIf 4=+/##.FilesAndDirs.IsFile list
+ →GoToTidyUp 4≠+/##.FilesAndDirs.IsFile list
  list←↑('recursive' 1)##.FilesAndDirs.Dir path,'\*3.cs*'
- →PassesIf 1=+/##.FilesAndDirs.IsFile list
+ →GoToTidyUp 1≠+/##.FilesAndDirs.IsFile list
 
  R←∆OK
 

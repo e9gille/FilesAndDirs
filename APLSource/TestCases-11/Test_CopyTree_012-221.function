@@ -5,7 +5,7 @@
 
  tempPath←##.FilesAndDirs.GetTempPath,↑⎕SI
  successFlag←'Create!'##.FilesAndDirs.CheckPath tempPath
- ⍎(1≠successFlag)/'. ⍝ Something went wrong'
+ Assert successFlag
  (sucess more list)←(∆Home,##.FilesAndDirs.CurrentSep)##.FilesAndDirs.CopyTree tempPath
  →GoToTidyUp 1≠sucess
  →GoToTidyUp~0∊⍴more
@@ -17,6 +17,4 @@
  R←∆OK
 
 ∆TidyUp:
- :Trap 0
-     rc←##.FilesAndDirs.RmDir tempPath
- :EndTrap
+ rc←##.FilesAndDirs.RmDir tempPath

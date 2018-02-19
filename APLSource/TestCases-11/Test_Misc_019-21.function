@@ -6,7 +6,7 @@
  tempPath←##.FilesAndDirs.GetTempPath,'\Test_NNAMES\'
  :If ##.FilesAndDirs.Exists tempPath
      rc←##.FilesAndDirs.RmDir tempPath
-     ⍎(0≠↑rc)/'. ⍝ Huuh?!'
+     Assert 0=↑rc
  :EndIf
 
  opened←⎕NNUMS
@@ -25,5 +25,5 @@
  ⎕NUNTIE ⎕NNUMS~opened
  :If ##.FilesAndDirs.Exists tempPath
      rc←##.FilesAndDirs.RmDir tempPath
-     ⍎(0≠↑rc)/'. ⍝ Huuh?!'
+     Assert 0=↑rc
  :EndIf

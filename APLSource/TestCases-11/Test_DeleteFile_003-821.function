@@ -13,16 +13,12 @@
  {⎕NEXISTS ⍵: ⋄ _←⎕DL 0.1 ⋄ ∇ ⍵}link ⍝ Make sure the link exists!
 
  success←##.FilesAndDirs.DeleteFile link
- →PassesIf 1=success
- →PassesIf 0=##.FilesAndDirs.Exists link
- →PassesIf 1=##.FilesAndDirs.Exists source
+ →GoToTidyUp 1≠success
+ →GoToTidyUp 0≠##.FilesAndDirs.Exists link
+ →GoToTidyUp 1≠##.FilesAndDirs.Exists source
 
  R←∆OK
 
 ∆TidyUp:
- :Trap 0
-     {}##.FilesAndDirs.RmDir source
- :EndTrap
- :Trap 0
-     {}##.FilesAndDirs.RmDir link
- :EndTrap
+ {}##.FilesAndDirs.RmDir source
+ {}##.FilesAndDirs.RmDir link

@@ -6,7 +6,7 @@
  myTempPath←##.FilesAndDirs.GetTempPath,↑⎕SI
  {}##.FilesAndDirs.RmDir myTempPath
  success←'Create!'##.FilesAndDirs.CheckPath myTempPath
- ⍎(0=success)/'. ⍝ Huuh?!'
+ Assert success
  filename←myTempPath,'\foo2'
  tno←##.FilesAndDirs.CreateFile filename
 

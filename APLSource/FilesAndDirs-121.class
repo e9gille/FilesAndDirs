@@ -51,11 +51,13 @@
 
     ∇ r←Version
       :Access Public shared
-      r←(Last⍕⎕THIS)'1.8.0' '2018-02-15'
+      r←(Last⍕⎕THIS)'1.8.1' '2018-02-19'
     ∇
 
     ∇ History
       :Access Public shared
+      ⍝ * 1.8.1
+      ⍝   * Bug fix: a pattern `*.extension` (without path name) never found anything.
       ⍝ * 1.8.0
       ⍝   * First release on GitHub after the conversion from the APL wiki.
       ⍝ * 1.7.1\\
@@ -66,17 +68,6 @@
       ⍝     * `Dir` when given a path without a trailing separator should return information
       ⍝       just for the given directory but **not** its contents. That's now the case but
       ⍝       it may break your code.
-      ⍝ * 1.6.2
-      ⍝   * Performance improved: `ListDirs`.
-      ⍝   * Bug fixes:
-      ⍝     * Internally `NormalizePath` was called with ¨ - that's redundant.
-      ⍝     * `(recursive 1) Dir folder` had a problem.
-      ⍝     * File pattern with wildcard and an extension (like `*.log`) had a problem in both
-      ⍝       `Dir` and `ListDir`.
-      ⍝ * 1.6.1
-      ⍝   * Bug fix: `'expand'∘NormalizePath¨fileList` did not expand. The `¨` is however redundant.
-      ⍝ * 1.6.0
-      ⍝   * Now managed by acre 3.
     ∇
 
     ∇ r←{parms_}Dir path;buff;list;more;parms;rc;extension;filename;folder;subFolders;pattern;isSelfCall
@@ -175,7 +166,7 @@
               :AndIf 0=⎕NEXISTS buff
                   'path does not exist'⎕SIGNAL 6
               :EndIf
-              pattern←folder,(filename{0∊⍴⍺,⍵:'' ⋄ '/',⍺,⍵}extension)
+              pattern←(folder,(~0∊⍴folder)/'/'),(filename{0∊⍴⍺,⍵:'' ⋄ ⍺,⍵}extension)
               buff←(0 1,parms.type~0 1)⎕NINFO⍠('Follow'parms.follow)('Wildcard' 1)⊣pattern
               buff←((1⊃buff)∊1 2 4)∘/¨buff   ⍝ Ordinary files, folders and links
               (0⊃buff)←NormalizePath 0⊃buff

@@ -9,11 +9,11 @@
  myTempFile2←tempDir,(⍕#.OS.GetPID),'_',' '~⍨(⍕⎕TS),'_2'
  #.APLTreeUtils.WriteUtf8File myTempFile'Temp test file'
  #.APLTreeUtils.WriteUtf8File myTempFile2'Another temp test file'
- →PassesIf 0=##.FilesAndDirs.IsDir myTempFile
- →PassesIf 1=##.FilesAndDirs.IsFile myTempFile
- →PassesIf 1 1≡##.FilesAndDirs.IsFile myTempFile myTempFile2
+ →GoToTidyUp 0≠##.FilesAndDirs.IsDir myTempFile
+ →GoToTidyUp 1≠##.FilesAndDirs.IsFile myTempFile
+ →GoToTidyUp 1 1≢##.FilesAndDirs.IsFile myTempFile myTempFile2
  tno←myTempFile ⎕NTIE 0
- →PassesIf 1=##.FilesAndDirs.IsFile tno
+ →GoToTidyUp 1≠##.FilesAndDirs.IsFile tno
  ⎕NUNTIE tno
  :Trap 18
      {}##.FilesAndDirs.IsFile tno
@@ -23,6 +23,4 @@
  R←∆OK
 
 ∆TidyUp:
- :If ⎕NEXISTS myTempFile
-     ##.FilesAndDirs.DeleteFile myTempFile
- :EndIf
+ ##.FilesAndDirs.DeleteFile myTempFile

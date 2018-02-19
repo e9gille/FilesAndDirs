@@ -8,15 +8,13 @@
  success←##.FilesAndDirs.MkDir myTempPath
  filename←myTempPath,'\',↑⎕SI
  #.APLTreeUtils.WriteUtf8File filename'Hello world'
- ⍎(0=##.FilesAndDirs.IsFile filename)/'. ⍝ huh?!'
+ Assert ##.FilesAndDirs.IsFile filename
  success←##.FilesAndDirs.DeleteFile filename
- →PassesIf 1=success
- →PassesIf 0=##.FilesAndDirs.IsFile filename
- →PassesIf 0=##.FilesAndDirs.Exists filename
+ →GoToTidyUp 1≠success
+ →GoToTidyUp 0≠##.FilesAndDirs.IsFile filename
+ →GoToTidyUp 0≠##.FilesAndDirs.Exists filename
 
  R←∆OK
 
 ∆TidyUp:
- :Trap 0
-     {}##.FilesAndDirs.RmDir myTempPath
- :EndTrap
+ {}##.FilesAndDirs.RmDir myTempPath

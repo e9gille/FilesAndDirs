@@ -1,0 +1,18 @@
+ R←Test_Dir_036(stopFlag batchFlag);⎕TRAP;list;path;path2;Old
+⍝ Test the `Dir` method on "*.log'. Was once a bug.
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←∆Failed
+
+ path←##.FilesAndDirs.GetTempPath,'\',↑⎕SI
+ 'Create!'##.FilesAndDirs.CheckPath path
+ {}##.FilesAndDirs.Cd path
+ #.APLTreeUtils.WriteUtf8File('file.md')('# File 1' '' 'A para')
+ list←↑##.FilesAndDirs.Dir'*.md'
+
+ →GoToTidyUp 1≠⍴list
+
+ R←∆OK
+
+∆TidyUp:
+ {}##.FilesAndDirs.PolishCurrentDir ⎕WSID
+ ##.FilesAndDirs.RmDir path

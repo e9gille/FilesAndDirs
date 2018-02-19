@@ -5,7 +5,7 @@
 
  tempPath←##.FilesAndDirs.GetTempPath,↑⎕SI
  successFlag←'Create!'##.FilesAndDirs.CheckPath tempPath
- ⍎(1≠successFlag)/'. ⍝ Something went wrong'
+ Assert successFlag
  (success more list)←tempPath ##.FilesAndDirs.CopyTree tempPath,'__copy/'
  →GoToTidyUp 1≠success
  →GoToTidyUp~0∊⍴more
