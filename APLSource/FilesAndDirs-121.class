@@ -45,7 +45,7 @@
 ⍝ Kai Jaeger ⋄ APL Team Ltd\\
 ⍝ Homepage: http://aplwiki.com/FilesAndDirs
 
-    :Include APLTreeUtils
+    :Include ##.APLTreeUtils
 
     ⎕IO←0 ⋄ ⎕ML←3
 
