@@ -1,8 +1,9 @@
- R←Test_Dir_036(stopFlag batchFlag);⎕TRAP;list;path;path2;Old
+ R←Test_Dir_036(stopFlag batchFlag);⎕TRAP;list;path;path2;Old;currentDir
 ⍝ Test the `Dir` method on "*.log'. Was once a bug.
  ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
  R←∆Failed
 
+ currentDir←##.FilesAndDirs.PWD
  path←##.FilesAndDirs.GetTempPath,'\',↑⎕SI
  'Create!'##.FilesAndDirs.CheckPath path
  {}##.FilesAndDirs.Cd path
@@ -14,5 +15,5 @@
  R←∆OK
 
 ∆TidyUp:
- {}##.FilesAndDirs.PolishCurrentDir ⎕WSID
+ {}##.FilesAndDirs.Cd currentDir
  ##.FilesAndDirs.RmDir path

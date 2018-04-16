@@ -51,17 +51,19 @@
 
     ∇ r←Version
       :Access Public shared
-      r←(Last⍕⎕THIS)'1.8.1' '2018-02-19'
+      r←(Last⍕⎕THIS)'1.8.2' '2018-04-16'
     ∇
 
     ∇ History
       :Access Public shared
+      ⍝ * 1.8.2
+      ⍝   * New method `GetTempFilename2` added. Takes different arguments, see there.
       ⍝ * 1.8.1
       ⍝   * Bug fix: a pattern `*.extension` (without path name) never found anything.
       ⍝ * 1.8.0
       ⍝   * First release on GitHub after the conversion from the APL wiki.
       ⍝ * 1.7.1\\
-      ⍝   Bug fix that was introduced with 1.7.0: if a folder contained directories that match a 
+      ⍝   Bug fix that was introduced with 1.7.0: if a folder contained directories that match a
       ⍝   wildcard expression those folders were ignored anyway.
       ⍝ * 1.7.0
       ⍝   * Bug fixes:
@@ -345,7 +347,7 @@
     ⍝   existing files will be overwritten.
       :Access Public Shared
       success←1 ⋄ more←'' ⋄ list←0 3⍴'' 0 0
-
+     
       'Invalid left argument'⎕SIGNAL 11/⍨(~(≡source)∊0 1)∨80≠⎕DR source
       'Invalid right argument'⎕SIGNAL 11/⍨(~(≡target)∊0 1)∨80≠⎕DR target
       'Left argument is not a directory'⎕SIGNAL 11/⍨0=IsDir source
@@ -747,13 +749,14 @@
       :EndIf
     ∇
 
-    ∇ filename←{PrefixString}GetTempFilename path;rc;start;no;fno;flag
+    ∇ filename←{PrefixString}GetTempFilename path;rc;start;no;fno
     ⍝ Returns the name of an unused temporary filename. If `path` is empty the default temp
     ⍝ path is taken; that's what `GetTempPath` would return. This means you can overwrite
     ⍝ this by specifying a path.\\
     ⍝ `PrefixString`, if defined, is a leading string of the filename
     ⍝ going to be generated. This is **not** the same as\\
     ⍝ `'pref',GetTempFileName ''`\\
+    ⍝ See also `GetTempFilename2` which is recommended.\\
     ⍝ because specified as left argument it is taken into account
     ⍝ when the uniqueness of the created filename is tested.\\
     ⍝ This function does **not** use the Windows built-in function since
@@ -776,14 +779,47 @@
           ⍝ no←100⊥3↓⎕TS ⍝ Not reliable: can take a large number of tries before successful
           :Repeat
               filename←path,PrefixString,(⎕AN,'_',⍕no),'.tmp'
-              fno←0
               :Trap 22
-                  ⎕NUNTIE fno←filename ⎕NCREATE 0
-                  flag←1
+                  fno←filename ⎕NCREATE 0
+                  ⎕NUNTIE fno
+              :Else
+                  fno←0
               :EndTrap
               no+←10
           :Until (fno≠0)∨no>start+1000×10  ⍝ max 1000 tries
+          'Unable to create temporay file'⎕SIGNAL 11/⍨fno=0
       :EndIf
+      filename←NormalizePath filename
+    ∇
+
+    ∇ filename←{extension}GetTempFilename2 prefixString;rc;start;no;fno;path
+    ⍝ Returns the name of an unused temporary filename. `prefixString`, when empty, defaults
+    ⍝ to `⎕AN`. The name of the file will match `prefixString` followed by an `_` and a
+    ⍝ randomly generated number.\\
+    ⍝ `extension`, if defined, defines the extension of the temp file without the dot.
+    ⍝ This defaults to `tmp`.\\
+    ⍝ This function does **not** use the Windows built-in function since
+    ⍝ it has proven to be unreliable under W7 (at least).
+      :Access Public Shared
+      extension←{0<⎕NC ⍵:⍎⍵ ⋄ 'tmp'}'extension'
+      extension←('.'=1⍴extension)↓extension
+      :If 0∊⍴,prefixString
+          prefixString←⎕AN
+      :EndIf
+      path←GetTempPath
+      start←no←⍎{(,'ZI2,ZI2,ZI2'⎕FMT 3↑⍵),⍕3↓⍵}3↓⎕TS  ⍝ Expensive but successful very soon
+      ⍝ no←100⊥3↓⎕TS ⍝ Not reliable: can take a large number of tries before successful
+      :Repeat
+          filename←path,(prefixString,'_',⍕no),'.',extension
+          :Trap 22
+              fno←filename ⎕NCREATE 0
+              ⎕NUNTIE fno
+          :Else
+              fno←0
+          :EndTrap
+          no+←10
+      :Until (fno≠0)∨no>start+1000×10  ⍝ max 1000 tries
+      'Unable to create temporay file'⎕SIGNAL 11/⍨fno=0
       filename←NormalizePath filename
     ∇
 

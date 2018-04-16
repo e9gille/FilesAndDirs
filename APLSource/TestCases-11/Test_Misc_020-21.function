@@ -1,0 +1,38 @@
+ R←Test_Misc_020(stopFlag batchFlag);⎕TRAP;extension;filename;path;tempFilename1;tempFilename2;tempFilename4;tempFilename3
+⍝ Test the `GetTempFilename2` method
+⍝ See also the test for the `GetTempFilename` method.
+ ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
+ R←∆Failed
+
+ tempFilename1←##.FilesAndDirs.GetTempFilename2''
+ (path filename extension)←⎕NPARTS tempFilename1
+ →GoToTidyUp path≢##.FilesAndDirs.GetTempPath
+ →GoToTidyUp'.tmp'≢extension
+ →GoToTidyUp ⎕AN≢↑'_'##.APLTreeUtils.Split filename
+ →GoToTidyUp 1≠##.FilesAndDirs.IsFile tempFilename1
+
+ tempFilename2←'html'##.FilesAndDirs.GetTempFilename2''
+ (path filename extension)←⎕NPARTS tempFilename2
+ →GoToTidyUp path≢##.FilesAndDirs.GetTempPath
+ →GoToTidyUp'.html'≢extension
+ →GoToTidyUp ⎕AN≢↑'_'##.APLTreeUtils.Split filename
+ →GoToTidyUp 1≠##.FilesAndDirs.IsFile tempFilename2
+
+ tempFilename3←'.html'##.FilesAndDirs.GetTempFilename2''
+ (path filename extension)←⎕NPARTS tempFilename3
+ →GoToTidyUp path≢##.FilesAndDirs.GetTempPath
+ →GoToTidyUp'.html'≢extension
+ →GoToTidyUp ⎕AN≢↑'_'##.APLTreeUtils.Split filename
+ →GoToTidyUp 1≠##.FilesAndDirs.IsFile tempFilename3
+
+ tempFilename4←'dyalog'##.FilesAndDirs.GetTempFilename2'FOO'
+ (path filename extension)←⎕NPARTS tempFilename4
+ →GoToTidyUp path≢##.FilesAndDirs.GetTempPath
+ →GoToTidyUp'.dyalog'≢extension
+ →GoToTidyUp'FOO'≢↑'_'##.APLTreeUtils.Split filename
+ →GoToTidyUp 1≠##.FilesAndDirs.IsFile tempFilename4
+
+ R←∆OK
+
+∆TidyUp:
+ {0::r←⍬ ⋄ ##.FilesAndDirs.DeleteFile ⍵}¨tempFilename1 tempFilename2 tempFilename3 tempFilename4

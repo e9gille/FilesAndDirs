@@ -1,5 +1,6 @@
  R←Test_Misc_010(stopFlag batchFlag);⎕TRAP;tempFilename
 ⍝ Test the `GetTempFilename` method
+⍝ See also the test for the `GetTempFilename2` method.
  ⎕TRAP←(999 'C' '. ⍝ Deliberate error')(0 'N')
  R←∆Failed
 
