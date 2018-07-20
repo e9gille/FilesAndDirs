@@ -1,0 +1,27 @@
+{
+  "name": "filesanddirs",
+  "version": "1.8.5",
+  "description": "Files and Dirs is a set of tools to deal with filesystem",
+  "files": [
+    "acreconfig.txt",
+    "APLSource/FilesAndDirs*"
+  ],
+  "main": "FilesAndDirs",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aplteam/FilesAndDirs.git"
+  },
+  "keywords": [
+    "APL",
+    "filesystem"
+  ],
+  "author": "Kai Jaeger",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/aplteam/FilesAndDirs/issues"
+  },
+  "homepage": "https://github.com/aplteam/FilesAndDirs#readme",
+  "dependencies": {
+    "apltreeutils": "^4.2.0"
+  }
+}
