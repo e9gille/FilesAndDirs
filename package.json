@@ -1,12 +1,13 @@
 {
   "name": "filesanddirs",
-  "version": "1.8.5",
+  "version": "1.8.6",
   "description": "Files and Dirs is a set of tools to deal with filesystem",
   "files": [
     "acreconfig.txt",
     "APLSource/FilesAndDirs*"
   ],
   "main": "FilesAndDirs",
+  "projectSpace": "FilesAndDirs",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/aplteam/FilesAndDirs.git"
@@ -22,6 +23,6 @@
   },
   "homepage": "https://github.com/aplteam/FilesAndDirs#readme",
   "dependencies": {
-    "apltreeutils": "^4.2.0"
+    "apltreeutils": "^4.2.4"
   }
 }
